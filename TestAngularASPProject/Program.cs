@@ -1,10 +1,14 @@
-﻿var builder = WebApplication.CreateBuilder(args);
+﻿/**
+ * Creates the `WebApplicationBuilder` instance to build the web application
+ * with its configuration (services, middlewares and other components).
+ */
+var builder = WebApplication.CreateBuilder(args); // Create the container
 
 // Add services to the container.
 
 builder.Services.AddControllersWithViews();
 
-var app = builder.Build();
+var app = builder.Build(); // Build the container
 
 // Configure the HTTP request pipeline.
 if (!app.Environment.IsDevelopment())

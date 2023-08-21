@@ -19,3 +19,6 @@ code {
   border-color: #1861ac;
 }
 
+.break-lines {
+  white-space: pre; /* or pre-wrap */
+}

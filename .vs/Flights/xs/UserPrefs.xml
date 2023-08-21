@@ -1,0 +1,36 @@
+﻿<Properties StartupConfiguration="{47CDAFCF-11C3-47FB-8D73-C00E2F855D21}|Default">
+  <MonoDevelop.Ide.ItemProperties.Flights PreferredExecutionTarget="/Applications/Google Chrome.app" />
+  <MonoDevelop.Ide.Workspace ActiveConfiguration="Debug" />
+  <MonoDevelop.Ide.Workbench ActiveDocument="TestAngularASPProject/ClientApp/src/app/home/home.component.html">
+    <Files>
+      <File FileName="TestAngularASPProject/WeatherForecast.cs" Line="7" Column="28" />
+      <File FileName="TestAngularASPProject/Program.cs" Line="11" Column="50" />
+      <File FileName="TestAngularASPProject/Pages/_ViewImports.cshtml" Line="1" Column="1" />
+      <File FileName="TestAngularASPProject/Controllers/WeatherForecastController.cs" Line="1" Column="1" />
+      <File FileName="TestAngularASPProject/ClientApp/src/app/home/home.component.ts" Line="2" Column="1" />
+      <File FileName="TestAngularASPProject/ClientApp/src/styles.css" Line="23" Column="19" />
+      <File FileName="TestAngularASPProject/ClientApp/src/index.html" Line="10" Column="10" />
+      <File FileName="TestAngularASPProject/ClientApp/src/app/app.component.ts" Line="1" Column="1" />
+      <File FileName="TestAngularASPProject/ClientApp/src/app/fetch-data/fetch-data.component.ts" Line="1" Column="1" />
+      <File FileName="TestAngularASPProject/ClientApp/src/app/home/home.component.html" Line="371" Column="7" />
+      <File FileName="TestAngularASPProject/ClientApp/src/app/my-component/my-component.component.ts" Line="1" Column="43" />
+      <File FileName="TestAngularASPProject/ClientApp/src/app/my-component/my-component.component.html" Line="8" Column="40" />
+      <File FileName="TestAngularASPProject/ClientApp/src/app/nav-menu/nav-menu.component.ts" Line="1" Column="1" />
+      <File FileName="TestAngularASPProject/ClientApp/src/app/nav-menu/nav-menu.component.html" Line="35" Column="50" />
+      <File FileName="TestAngularASPProject/ClientApp/src/app/app.module.ts" Line="64" Column="6" />
+      <File FileName="TestAngularASPProject/ClientApp/src/app/app.component.html" Line="7" Column="8" />
+    </Files>
+    <Pads>
+      <Pad Id="ProjectPad">
+        <State name="__root__">
+          <Node name="Flights" expanded="True" />
+        </State>
+      </Pad>
+    </Pads>
+  </MonoDevelop.Ide.Workbench>
+  <MonoDevelop.Ide.DebuggingService.Breakpoints>
+    <BreakpointStore />
+  </MonoDevelop.Ide.DebuggingService.Breakpoints>
+  <MonoDevelop.Ide.DebuggingService.PinnedWatches />
+  <MultiItemStartupConfigurations />
+</Properties>

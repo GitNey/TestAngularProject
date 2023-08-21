@@ -1,15 +1,371 @@
-<h1>Hello, world!</h1>
-<p>Welcome to your new single-page application, built with:</p>
-<ul>
-  <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
-  <li><a href='https://angular.io/'>Angular</a> and <a href='http://www.typescriptlang.org/'>TypeScript</a> for client-side code</li>
-  <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
-</ul>
-<p>To help you get started, we've also set up:</p>
-<ul>
-  <li><strong>Client-side navigation</strong>. For example, click <em>Counter</em> then <em>Back</em> to return here.</li>
-  <li><strong>Angular CLI integration</strong>. In development mode, there's no need to run <code>ng serve</code>. It runs in the background automatically, so your client-side resources are dynamically built on demand and the page refreshes when you modify any file.</li>
-  <li><strong>Efficient production builds</strong>. In production mode, development-time features are disabled, and your <code>dotnet publish</code> configuration automatically invokes <code>ng build</code> to produce minified, ahead-of-time compiled JavaScript files.</li>
-</ul>
-<p>The <code>ClientApp</code> subdirectory is a standard Angular CLI application. If you open a command prompt in that directory, you can run any <code>ng</code> command (e.g., <code>ng test</code>), or use <code>npm</code> to install extra packages into it.</p>
+<h1>Notes:</h1>
+<ol>
+    <!-- Day 1 -->
+    <li><a href="#home">Hello, world</a></li>
+    <li><a href="#application-entry-point">App entry-point</a></li>
+    <li><a href="#weatherforecast-controllers-classes">Weatherforecast Controllers and Classes</a></li>
+    <li><a href="#angular-client-files">Understanding the Angular Client App Files</a></li>
+    <li><a href="#typescript-intro">Typescript Intro</a></li>
+    <li><a href="#typescript-decorators">Typescript Decorators</a></li>
+    <li><a href="#custom-selectors">Creating Custom Selectors</a></li>
+    <!-- Day 2 -->
+    <li><a href="#data-binding-basics">Data-binding Basics</a></li>
+    <li><a href="#understanding-ngmodule">Understanding <code>@NgModule</code> Decorator</a></li>
+    <li><a href="#understanding-how-angular-handles-routing">Understanding How Angular Handles Routing</a></li>
+</ol>
 
+<hr />
+
+<!-- #home -->
+<div id="home" class="py-4">
+    <h1>Hello, world!</h1>
+    <p>Welcome to your new single-page application, built with:</p>
+    <ul>
+        <li><a href='https://get.asp.net/'>ASP.NET Core</a> and <a href='https://msdn.microsoft.com/en-us/library/67ef8sbd.aspx'>C#</a> for cross-platform server-side code</li>
+        <li><a href='https://angular.io/'>Angular</a> and <a href='http://www.typescriptlang.org/'>TypeScript</a> for client-side code</li>
+        <li><a href='http://getbootstrap.com/'>Bootstrap</a> for layout and styling</li>
+    </ul>
+    <p>To help you get started, we've also set up:</p>
+    <ul>
+        <li><strong>Client-side navigation</strong>. For example, click <em>Counter</em> then <em>Back</em> to return here.</li>
+        <li><strong>Angular CLI integration</strong>. In development mode, there's no need to run <code>ng serve</code>. It runs in the background automatically, so your client-side resources are dynamically built on demand and the page refreshes when you modify any file.</li>
+        <li><strong>Efficient production builds</strong>. In production mode, development-time features are disabled, and your <code>dotnet publish</code> configuration automatically invokes <code>ng build</code> to produce minified, ahead-of-time compiled JavaScript files.</li>
+    </ul>
+    <p>The <code>ClientApp</code> subdirectory is a standard Angular CLI application. If you open a command prompt in that directory, you can run any <code>ng</code> command (e.g., <code>ng test</code>), or use <code>npm</code> to install extra packages into it.</p>
+</div>
+
+<hr />
+
+<!-- #application-entry-point -->
+<div id="application-entry-point" class="py-4">
+    <h1><code>Program.cs</code></h1>
+    <p>
+        This file basically serves as the configuration of the ASP.NET Core backend. The formal definition of the
+        significance of this file is as follows:
+    </p>
+    <p>
+        The <b>Program.cs</b> file in an ASP.NET Core Angular app is a central part of the application startup process.
+        It contains the code responsible for configuring and building the web app, as well as setting up the HTTP request
+        pipeline. Let's breakdown the significance of the code in this file in its barest form.
+    </p>
+    <code>var builder = WebApplication.CreateBuilder(args);</code>
+    <p>
+        This line creates a new <b>WebApplicationBuilder</b> instance using the <b>WebApplication.CreateBuilder</b> method.
+        The builder is used to configure and set up the application services, middleware and other components.
+    </p>
+    <code>builder.Services.AddControllersWithViews();</code>
+    <p>
+        This line adds services to MVC (Model-View-Controller) to the dependency injection container. It prepares
+        the app to handle controllers and views, which are essential for serving web pages and processing user requests.
+    </p>
+    <code>var app = builder.Build()</code>
+    <p>
+        This line builds the web application using the configuration and services defined in the builder container. It
+        creates an instance of <b>WebApplication</b> class, which represents the running web app.
+    </p>
+    <code class="break-lines" ngPreserveWhitespaces>
+        if (!app.Environment.IsDevelopment())
+        {{'{'}}
+        app.useHsts();
+        {{'}'}}
+    </code>
+    <p>
+        This block of code checks wether the app is running in a non-development environment. If not in development,
+        the app forces HTTP Strict Transport Security (HSTS) by adding the <b>UseHsts</b> middleware. HSTS helps ensure secure
+        communication by telling browsers to only use HTTPS for future requests.
+    </p>
+    <code class="break-lines" ngPreserveWhitespaces>
+        app.UseHttpsRedirection();
+        app.UseStaticFiles();
+        app.UseRouting();
+    </code>
+    <p>These lines of code add various middleware components to the HTTP request pipline:</p>
+    <ul>
+        <li><b>UseHttpsRedirection</b>: Redirects HTTP requests to HTTPS to ensure secure comms.</li>
+        <li>
+            <b>UseStaticFiles</b>: Enables the ability to serve static files (HTML, CSS, JS) from the <b>wwwroot</b>
+            directory.
+        </li>
+        <li><b>UseRouting</b>: Sets up routing for incoming requests based on URL paths.</li>
+    </ul>
+    <code class="break-lines" ngPreserveWhitespaces>
+        app.MapControllerRoute(
+        name: "default",
+        pattern: "{{'{'}}controller{{'}'}}/{{'{'}}action=Index{{'}'}}/{{'{'}}id?{{'}'}}"
+        );
+    </code>
+    <p>
+        This line configures the default route for MVC controllers. It maps incoming requests to specific controller
+        actions based on the URL structure. The <b>default</b> route specifies that requests without explicit controller and
+        action segments should be routed to the <b>Index</b> action of the default controller.
+    </p>
+    <code>
+        app.MapFallbackToFile("index.html");
+    </code>
+    <p>
+        This line sets up a fallback that serves the <b>index.html</b> file for all unmatched requests. This is especially
+        useful for SPAs like Angular apps, where the frontend handles routing internally. The <b>index.html</b> file usually
+        contains the Angular app and its logic.
+    </p>
+    <code>app.Run();</code>
+    <p>
+        This line starts the web application and enters the main event loop to listen for incoming requests and process them
+        based on the configured middleware pipeline.
+    </p>
+</div>
+
+<!-- #weatherforecase-controllers-classes -->
+<div id="weatherforecast-controllers-classes" class="py-4">
+    <h1>Weatherforecast Contollers and Classes</h1>
+    <p>
+        The HTML of the <a href="/fetch-data">/fetch-data</a> page is rendered by Angular. The <code>WeatherForecast</code>
+        class is used by the contoller <code>WeatherForecastController#Get</code>. It is basically acting as a DTO.
+    </p>
+    <p>It is worth noting that there are two attributes to the <code>WeatherForecastController</code> class:</p>
+    <ul>
+        <li>
+            <code>[ApiController]</code>: For external usage, so that another project (like the angular client) can connect
+            to it.
+        </li>
+        <li><code>[Route("[controller]")]</code></li>
+    </ul>
+    <p>
+        Note that the <a href="/fetch-data">Fetch Data</a> and <a href="/counter">Counter</a> pages are not shown in the <code>Pages</code> directory. Those pages are handled
+        by Angular and served from HTML files. When we created this project we essentially created the ASP.NET v7.0 back-end
+        server application and also the Angular front-end client application which lives in <code>ClientApp</code> folder.
+    </p>
+</div>
+
+<!-- #angular-client-files -->
+<div id="angular-client-files" class="py-4">
+    <h1>Understanding the Angular Client Files</h1>
+    <p>
+        <code>ClientApp/src</code> is where the Angular source code files for the client application live. The shell
+        container HTML is found in <code>ClientApp/src/index.html</code>. This is where everything is rendered, in this file
+        in the <code>app-root</code> element.
+    </p>
+</div>
+
+<!-- #typescript-intro -->
+<div id="typescript-intro" class="py-4">
+    <h1>Typescript Introduction</h1>
+    <p>
+        When analyzing the components of the Angular client application we begin to notice a few things. One of those
+        noticeable things is the fact that <code>ClientApp/src/app/home/home.component.ts</code> is a Typescript file. This
+        means that the home component is written in Typescript.
+    </p>
+
+    <p>
+        Angular uses Typescript by default for developing client applications. Typescript is transpiled to Javascript in
+        order to be interpretable by web browsers. Browsers by default run a Javascript engine. So they can interpret JS by default.
+    </p>
+
+    <p>
+        Javascript itself is a dynamically typed language. It checks for types at runtime. Typescript in the other-hand is
+        is a superset of Javascript featuring full type support and type safety/tooling. Typescript file extensions end in
+        <code>app.component<b>.ts</b></code>.
+    </p>
+
+    <p>Typescript was created by Microsoft and has similarities to C#. Example Typescript class:</p>
+    <code class="break-lines" ngPreserveWhitespaces>
+        export class AppComponent {{'{'}}
+        title: string = 'app'; // type definition with default value (automatic type inference)
+        items = ['item1', 'item2', 'item3'];
+        {{'}'}}
+    </code>
+
+    <h1>Defining Methods in Typescript</h1>
+
+    <code class="break-lines" ngPreserveWhitespaces>
+        export class AppComponent {{'{'}}
+        private log(text: string) {{'{'}} // methods are public in Typescript by default
+        // type definition is optional due to automatic type inference
+        var message: string = 'Message ' + text; // usage of parameter
+        {{'}'}}
+        {{'}'}}
+    </code>
+
+    <code class="break-lines" ngPreserveWhitespaces>
+        var a: string
+        var b: number
+        var c: boolean
+    </code>
+    <p>Built in Typescript Primitive Types are number, string and boolean.</p>
+
+    <code>var app : AppComponent = new AppComponent();</code>
+    <p>You can also have variables of type class.</p>
+
+    <code class="break-lines" ngPreserveWhitespaces>
+        var a : number[]
+        var b : string[]
+        var c : boolean[]
+        var app : AppComponent[]
+    </code>
+</div>
+
+<!-- #typescript-decorators -->
+<div id="typescript-decorators" class="py-4">
+    <h1>Typescript Decorators</h1>
+    <code class="break-lines" ngPreserveWhitespaces>
+        @Component({{'{'}}
+        selector: 'app-root', // the shell to render into
+        templateUrl: '/app.component.html' // the template file to use.
+        {{'}'}})
+        export class AppComponent {{'{'}}
+        {{'}'}}
+    </code>
+
+    <p>
+        The above Typescript class has a component decorator. Angular uses Typescript decorators kind of like attributes in C#.
+    </p>
+</div>
+
+<!-- #custom-selectors -->
+<div id="custom-selectors" class="py-4">
+    <h1>Custom Selectors</h1>
+    <p>Angular lets you create custom selectors for use in your templates/components.</p>
+    <code class="break-lines" ngPreserveWhitespaces>
+        body -> app-root -> [app-nav, container -> router-outlet]
+    </code>
+    <p>Angular is replacing the custom tag elements with the templates they point to.</p>
+</div>
+
+<!-- #data-binding-basics -->
+<div id="data-binding-basics" class="py-4">
+    <h1>Data-binding Basics</h1>
+    <p>There are two types of data-binding when working with Angular components:</p>
+    <h1>One-way Data-binding</h1>
+    <code class="break-lines" ngPreserveWhitespaces>
+        // the-component.component.ts
+        @Component({{'{'}}
+        templateUrl: './path-to-template.component.html',
+        selector: 'app-root',
+        {{'}'}})
+        export class TheComponent {{'{'}}
+        message = 'Some Message Value';
+        {{'}'}}
+    </code>
+    <code class="code break-lines" ngPreserveWhitespaces>
+        &lt;!-- the-component.component.html --&gt;
+        &lt;h1&gt;Page Title&lt;/h1&gt;
+        {{'{{'}}message{{'}}'}}
+    </code>
+    <p>
+        We can define a property on the exported component class and then render it in the component's template HTML using double
+        curly braces.
+    </p>
+
+    <h1>Event-binding</h1>
+    <code class="break-lines" ngPreserveWhitespaces>
+        // the-component.component.ts
+        @Component({{'{'}}
+        templateUrl: './the-component.component.html',
+        selector: 'app-root',
+        {{'}'}})
+        export class TheComponent {{'{'}}
+        favoriteFood = 'dragon fruit';
+        randomFoods : string[] = [
+        'pizza', 'cheeseburger', 'bison',
+        'wild rice', 'peanut butter', 'pineapple',
+        ];
+
+        updateMessage() : void {{'{'}}
+        const randIdx = Math.ceil(Math.random() * this.randomFoods.length);
+        this.favoriteFood = this.randomFoods[randIdx];
+        {{'}'}}
+        {{'}'}}
+    </code>
+    <p>Here we see defined a public method <code>updateMessage</code> that changes the value of <code>favoriteFood</code> to random new value.</p>
+    <code class="break-lines" ngPreserveWhitespaces>
+        &lt;!-- the-component.component.html --&gt;
+        &lt;h1&gt;Page Title&lt;/h1&gt;
+        &lt;button class="btn btn-primary" (click)="updateMessage"&gt;
+        Update Food
+        &lt;button/&gt;
+    </code>
+    <p>
+        Here we see the event method bound to a button element on the template. When the event is triggered on the button element
+        the method is invoked.
+    </p>
+</div>
+
+<div id="understanding-ngmodule" class="py-4">
+    <h1>Understanding <code>@NgModule({{'{'}}...{{'}'}})</code> Decorator</h1>
+
+    <code class="break-lines" ngPreserveWhitespaces>
+        import {{'{'}} AppComponent {{'}'}} from './app.component.ts';
+        import {{'{'}} MyComponent {{'}'}} from './MyComponent/my-component.component.ts';
+        import {{'{'}} RouterModule {{'}'}} from '@angular/router';
+        // ...
+
+        @NgModule({{'{'}}
+        declarations: [
+        AppComponent,
+        MyComponent,
+        ],
+        imports: [
+        RouterModule.forRoot([
+        // my newly added route, it maps to component: MyComponent
+        {{'{'}} path: 'my-component', component: MyComponent {{'}'}}
+        ]),
+        ],
+        providers: [],
+        bootstrap: [AppComponent]
+        {{'}'}})
+        export class AppModule {{'{'}}{{'}'}}
+    </code>
+
+    <p>
+        There are several fields that can be used to configure and customize
+        the behavior of a module. The fields in this decorator provide control over
+        services, components and other features used in this decorator.
+    </p>
+
+    <ul>
+        <li>
+            <p class="mb-0"><b>Declarations</b></p>
+            <p>
+                Used to declare components, directives and pipes that belong to the module.
+                These declarations make items available for use within the module.
+            </p>
+        </li>
+        <li>
+            <p class="mb-0"><b>Imports</b></p>
+            <p>
+                Specifies other modules who's exported components, directives, or services
+                are required by components in this module.
+            </p>
+        </li>
+        <li>
+            <p class="mb-0"><b>Providers</b></p>
+            <p>
+                Used to configure the dependency injection system with a list of services
+                that the module should provide. These services are made available throughout
+                the application.
+            </p>
+        </li>
+        <li>
+            <p class="mb-0"><b>Bootstrap</b></p>
+            <p>
+                Used to configure the dependency injection system with a list of services
+                that the module should provide. These services are made available throughout
+                the application.
+            </p>
+        </li>
+    </ul>
+
+</div>
+
+<!-- #understanding-how-angular-handles-routing -->
+<div id="understanding-how-angular-handles-routing" class="py-4">
+    <h1>Understanding How Angular Handles Routing</h1>
+    <p>The jist of the concept is that we have a root component: <code>&lt;app-root /&gt;</code>.
+    The root component contains a shell component: <code>&lt;app-component /&gt;</code>. The shell component, in its own template,
+    contains a <code>&lt;router-outlet /&gt;</code> component.</p>
+    <p>Whenever routing occurs, the shell component remains unchanged and the router outlet component re-renders the contents
+    creating an effect that emulates a page change from the user's POV.</p>
+    <p>How is the router outlet container made aware of the new routes. Paths are registered in the <code>RouterModule.forRoot([...])</code>
+    object method. When considering routing in an ASP.NET Core 7 and Angular full stack app, you have to be cognizent of the difference between
+    MVC action routes and Angular router links. When a user clicks an <b>action link</b> in an ASP.NET MVC app, a request is sent to the server
+    and a controller action is called. Angular routes however are component addresses. Angular routes pre-load components in the router outlet.</p>
+</div>
